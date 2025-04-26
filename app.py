@@ -149,17 +149,52 @@ elif st.session_state.step == 3:
 
     # Save results to an in-memory Excel file
     output = io.BytesIO()
+    
     with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-        df_results.to_excel(writer, index=False, sheet_name="Fuzzy TOPSIS Results")
-        workbook = writer.book
-        worksheet = writer.sheets["Fuzzy TOPSIS Results"]
-        center_format = workbook.add_format({'align': 'center'})
-        worksheet.set_column('A:E', 20, center_format)
-
-    # Provide download button
+        # Write criteria weights
+        weights_df = pd.DataFrame({
+            'Criteria': list(criteria),
+            'Weight': final_weights  # final_weights: AHP ağırlıkları
+        })
+        weights_df.to_excel(writer, index=False, sheet_name='Criteria Weights')
+    
+        # Write CR value
+        cr_df = pd.DataFrame({
+            'Consistency Ratio (CR)': [consistency_ratio]  # consistency_ratio değişkeni
+        })
+        cr_df.to_excel(writer, index=False, sheet_name='Consistency Ratio')
+    
+        # Write Fuzzy TOPSIS results
+        df_results.to_excel(writer, index=False, sheet_name='F-TOPSIS Results')
+    
+        # Apply heatmap styling inside Excel
+        workbook  = writer.book
+        worksheet = writer.sheets['F-TOPSIS Results']
+    
+        # Define color scales for Rank and Weight (g) columns
+        rank_format = {
+            'type': '3_color_scale',
+            'min_color': "#63BE7B",   # Green
+            'mid_color': "#FFEB84",   # Yellow
+            'max_color': "#F8696B",   # Red
+        }
+        weight_format = {
+            'type': '3_color_scale',
+            'min_color': "#63BE7B",
+            'mid_color': "#FFEB84",
+            'max_color': "#F8696B",
+        }
+    
+        # Apply formatting (Excel column references)
+        worksheet.conditional_format('E2:E100', rank_format)  # Rank column
+        worksheet.conditional_format('F2:F100', weight_format)  # Weight (g) column
+    
+    output.seek(0)
+    
     st.download_button(
-        label="Download Results as Excel",
-        data=output.getvalue(),
-        file_name="fuzzy_topsis_results.xlsx",
+        label="📥 Download Results",
+        data=output,
+        file_name="pilot_results.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
