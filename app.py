@@ -213,7 +213,7 @@ elif st.session_state.step == 3:
     df_results["Weight (g)"] = df_results["Alternative"].map(lambda x: nvg_attributes[x]["Weight (g)"])
     df_results["Phosphor Screen"] = df_results["Alternative"].map(lambda x: nvg_attributes[x]["Phosphor Screen"])
 
-        st.subheader("Fuzzy TOPSIS Results")
+    st.subheader("Fuzzy TOPSIS Results")
     st.dataframe(df_results)
 
     # Save results to an in-memory Excel file
