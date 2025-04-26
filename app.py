@@ -188,7 +188,10 @@ elif st.session_state.step == 3:
     for alt in alternatives:
         d_pos = sum([fuzzy_distance(normalized[alt][i], fpis[i]) for i in range(len(criteria))])
         d_neg = sum([fuzzy_distance(normalized[alt][i], fnis[i]) for i in range(len(criteria))])
-        cci = d_neg / (d_pos + d_neg)
+        if (d_pos + d_neg) == 0:
+            cci = 0  # veya istersen 0.5 gibi nötr bir değer ver
+        else:
+            cci = d_neg / (d_pos + d_neg)
         results.append((alt, round(d_pos, 3), round(d_neg, 3), round(cci, 3)))
 
     results.sort(key=lambda x: x[3], reverse=True)
