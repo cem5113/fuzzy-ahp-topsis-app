@@ -153,7 +153,7 @@ elif st.session_state.step == 3:
     # Normalize the fuzzy decision matrix
     normalized = {}
     for crit_idx in range(len(criteria)):
-        crit_col = [evaluations[alt][criteria[crit_idx]] for alt in alternatives]
+        crit_col = [decision_matrix.loc[i, criteria[crit_idx]] for i in range(len(alternatives))]
         max_upper = max([x[2] for x in crit_col])
         normalized_col = [(x[0]/max_upper, x[1]/max_upper, x[2]/max_upper) for x in crit_col]
         for i, alt in enumerate(alternatives):
