@@ -193,7 +193,7 @@ elif st.session_state.step == 3:
 
     results.sort(key=lambda x: x[3], reverse=True)
     df_results = pd.DataFrame(results, columns=["Alternative", "D+ (FPIS)", "D- (FNIS)", "Closeness Coefficient"])
-    df_results["Rank"] = df_results["Closeness Coefficient"].rank(ascending=False).astype(int)
+    df_results["Rank"] = df_results["Closeness Coefficient"].rank(ascending=False, method="min").round(0).astype(int)
 
     st.subheader("Fuzzy TOPSIS Results")
     st.dataframe(df_results)
