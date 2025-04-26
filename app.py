@@ -208,13 +208,13 @@ elif st.session_state.step == 3:
         # Write criteria weights
         weights_df = pd.DataFrame({
             'Criteria': list(criteria),
-            'Weight': final_weights  # final_weights: AHP ağırlıkları
+            'Weight': weights  # final_weights: AHP ağırlıkları
         })
         weights_df.to_excel(writer, index=False, sheet_name='Criteria Weights')
     
         # Write CR value
         cr_df = pd.DataFrame({
-            'Consistency Ratio (CR)': [consistency_ratio]  # consistency_ratio değişkeni
+            'Consistency Ratio (CR)': [CR]  # consistency_ratio değişkeni
         })
         cr_df.to_excel(writer, index=False, sheet_name='Consistency Ratio')
     
