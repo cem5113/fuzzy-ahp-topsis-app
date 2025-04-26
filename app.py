@@ -59,7 +59,6 @@ if st.session_state.step == 1:
     if st.button("Next Step: Evaluate Alternatives"):
         st.session_state.matrix = matrix
         st.session_state.step = 2
-        st.experimental_rerun()
 
 # === Step 2: Alternative Evaluation Input ===
 elif st.session_state.step == 2:
@@ -81,7 +80,6 @@ elif st.session_state.step == 2:
     if st.button("Calculate Results"):
         st.session_state.evaluations = evaluations
         st.session_state.step = 3
-        st.experimental_rerun()
 
 # === Step 3: Perform Calculations and Show Results ===
 elif st.session_state.step == 3:
