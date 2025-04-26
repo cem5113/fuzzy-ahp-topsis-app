@@ -59,30 +59,39 @@ if st.session_state.step == 1:
     if st.button("Next Step: Evaluate Alternatives"):
         st.session_state.matrix = matrix
         st.session_state.step = 2
-     
-        # Step 1: Define Pairwise Comparison Matrix
-        pairwise_matrix = np.array([
-            [1, 1, 1, 2, 3, 4],
-            [0.25, 1, 1, 4, 5, 6],
-            [1.499, 2, 1, 4, 5, 6],
-            [0.25, 0.167, 0.167, 1, 0.25, 0.25],
-            [1.499, 1, 2, 4, 1, 5.999],
-            [1.499, 2, 2.5, 4, 2, 1],
-        ])
-        
+    
+        # Step 1.1: AHP Weights and CR Calculation
+        pairwise_matrix = matrix  # kullanıcıdan gelen seçimler!
+    
         criteria_labels = ["Depth perception", "Clarity", "Halo effect", "Adjustment", "Contrast", "Weight"]
-        
-        # Step 2: Calculate Geometric Mean for Each Row
+    
+        geometric_means = np.prod(pairwise_matrix, axis=1) ** (1/pairwise_matrix.shape[0])
+        weights = geometric_means / np.sum(geometric_means)
+    
+        weighted_sum = np.dot(pairwise_matrix, weights)
+        lambda_max = np.mean(weighted_sum / weights)
+    
+        n = pairwise_matrix.shape[0]
+        CI = (lambda_max - n) / (n - 1)
+        RI_dict = {1:0.00, 2:0.00, 3:0.58, 4:0.90, 5:1.12, 6:1.24, 7:1.32, 8:1.41, 9:1.45, 10:1.49}
+        RI = RI_dict[n]
+        CR = CI / RI
+    
+        # Save results to session state
+        st.session_state.ahp_weights = weights
+        st.session_state.consistency_ratio = CR
+
+        # Step 1.2: Calculate Geometric Mean for Each Row
         geometric_means = np.prod(pairwise_matrix, axis=1) ** (1/pairwise_matrix.shape[0])
         
-        # Step 3: Normalize to find Weights
+        # Step 1.3: Normalize to find Weights
         weights = geometric_means / np.sum(geometric_means)
         
-        # Step 4: Calculate λmax
+        # Step 1.4: Calculate λmax
         weighted_sum = np.dot(pairwise_matrix, weights)
         lambda_max = np.mean(weighted_sum / weights)
         
-        # Step 5: Consistency Index (CI) and Consistency Ratio (CR)
+        # Step 1.5: Consistency Index (CI) and Consistency Ratio (CR)
         n = pairwise_matrix.shape[0]
         CI = (lambda_max - n) / (n - 1)
         
@@ -91,7 +100,7 @@ if st.session_state.step == 1:
         RI = RI_dict[n]
         CR = CI / RI
         
-        # Step 6: Display
+        # Step 1.6: Display
         st.subheader("AHP Criteria Weights and Consistency Ratio")
         weights_df = pd.DataFrame({
             'Criteria': criteria_labels,
