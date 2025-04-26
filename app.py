@@ -198,7 +198,22 @@ elif st.session_state.step == 3:
     df_results = pd.DataFrame(results, columns=["Alternative", "D+ (FPIS)", "D- (FNIS)", "Closeness Coefficient"])
     df_results["Rank"] = df_results["Closeness Coefficient"].rank(ascending=False, method="min").round(0).astype(int)
 
-    st.subheader("Fuzzy TOPSIS Results")
+    # NVG ek özellikleri
+    nvg_attributes = {
+        "NVG A": {"Weight (g)": 592, "Phosphor Screen": "Green"},
+        "NVG B": {"Weight (g)": 506, "Phosphor Screen": "Green"},
+        "NVG C": {"Weight (g)": 424, "Phosphor Screen": "White"},
+        "NVG D": {"Weight (g)": 525, "Phosphor Screen": "Green"},
+        "NVG E": {"Weight (g)": 650, "Phosphor Screen": "White"},
+        "NVG F": {"Weight (g)": 560, "Phosphor Screen": "Green"},
+        "NVG G": {"Weight (g)": 600, "Phosphor Screen": "White"}
+    }
+    
+    # Yeni kolonları df_results'a ekle
+    df_results["Weight (g)"] = df_results["Alternative"].map(lambda x: nvg_attributes[x]["Weight (g)"])
+    df_results["Phosphor Screen"] = df_results["Alternative"].map(lambda x: nvg_attributes[x]["Phosphor Screen"])
+
+        st.subheader("Fuzzy TOPSIS Results")
     st.dataframe(df_results)
 
     # Save results to an in-memory Excel file
