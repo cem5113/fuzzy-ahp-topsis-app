@@ -158,6 +158,7 @@ elif st.session_state.step == 3:
 
     # --- Process Fuzzy TOPSIS ---
     evaluations = st.session_state.evaluations
+    decision_matrix = pd.DataFrame(evaluations).T
 
     # Normalize the fuzzy decision matrix
     normalized = {}
